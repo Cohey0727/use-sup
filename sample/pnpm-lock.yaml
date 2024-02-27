@@ -12,8 +12,8 @@ dependencies:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
   use-sup:
-    specifier: ^1.0.1
-    version: 1.0.1
+    specifier: ^1.0.4
+    version: 1.0.4
 
 devDependencies:
   '@types/react':
@@ -1864,8 +1864,8 @@ packages:
       punycode: 2.3.1
     dev: true
 
-  /use-sup@1.0.1:
-    resolution: {integrity: sha512-bgXGlttU5vGrY1yLXiTosmkQU2+4ViikdQDDf+nYn23S4RJceTW0TybQ/jTvITrTn2K/x+X5Qge2+Unzy0DpvA==}
+  /use-sup@1.0.4:
+    resolution: {integrity: sha512-gLktefUQft+PTFU02hWN2XOZDdxX9zb9qMSGzduRWwG2l1Ga+JPYfCvk97We6vUnDnKyM5/d0bzfEZozgkYlZg==}
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
