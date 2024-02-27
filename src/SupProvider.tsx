@@ -11,14 +11,14 @@ type SupProviderProps<T extends SupElements> = {
 };
 
 type SupContextType<T extends SupElements = SupElements> = {
-  annotate: (key: SupKey<T>) => number;
+  use: (key: SupKey<T>) => number;
   sups: T[number][];
 };
 
 const SupContext = useMemo(
   () =>
     React.createContext<SupContextType<any>>({
-      annotate: () => 0,
+      use: () => 0,
       sups: [],
     }),
   []
@@ -30,7 +30,7 @@ function SupProvider<T extends SupElements = SupElements>(
   const { sups, children } = props;
   const usedRef = React.useRef<SupKey<T>[]>([]);
 
-  const annotate = React.useCallback((key: SupKey<T>) => {
+  const use = React.useCallback((key: SupKey<T>) => {
     if (usedRef.current.includes(key)) {
       return usedRef.current.indexOf(key) + 1;
     }
@@ -58,7 +58,7 @@ function SupProvider<T extends SupElements = SupElements>(
   });
 
   return (
-    <SupContext.Provider value={{ annotate, sups: usedSups }}>
+    <SupContext.Provider value={{ use, sups: usedSups }}>
       {children}
     </SupContext.Provider>
   );
