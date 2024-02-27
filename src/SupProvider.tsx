@@ -17,7 +17,7 @@ type SupContextType<T extends SupElements = SupElements> = {
 
 const SupContext = useMemo(
   () =>
-    React.createContext<SupContextType<any>>({
+    React.createContext<SupContextType>({
       use: () => 0,
       sups: [],
     }),
