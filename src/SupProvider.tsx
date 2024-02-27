@@ -1,9 +1,14 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 type SupElement = { key: string; value: string };
-type SupElements = SupElement[];
+type SupElementWithIndex<K extends string> = {
+  key: K;
+  value: string;
+  index: number;
+};
+type SupElements = ReadonlyArray<SupElement>;
 
-type SupKey<T extends SupElements = SupElements> = T[number]["key"][];
+type SupKey<T extends SupElements = SupElements> = T[number]["key"];
 
 type SupProviderProps<T extends SupElements> = {
   children: React.ReactNode;
@@ -12,17 +17,13 @@ type SupProviderProps<T extends SupElements> = {
 
 type SupContextType<T extends SupElements = SupElements> = {
   use: (key: SupKey<T>) => number;
-  sups: T[number][];
+  sups: SupElementWithIndex<SupKey<T>>[];
 };
 
-const SupContext = useMemo(
-  () =>
-    React.createContext<SupContextType<any>>({
-      use: () => 0,
-      sups: [],
-    }),
-  []
-);
+const SupContext = React.createContext<SupContextType<any>>({
+  use: () => 0,
+  sups: [],
+});
 
 function SupProvider<T extends SupElements = SupElements>(
   props: SupProviderProps<T>
@@ -38,20 +39,24 @@ function SupProvider<T extends SupElements = SupElements>(
     return usedRef.current.length;
   }, []);
 
-  const [usedSups, setUsedSups] = React.useState<T[number][]>([]);
+  const [usedSups, setUsedSups] = React.useState<
+    SupElementWithIndex<SupKey<T>>[]
+  >([]);
 
   React.useEffect(() => {
     const newSups = sups.filter(({ key }) =>
       usedRef.current.includes(key as unknown as SupKey<T>)
     );
+    const newSupKeys = newSups.map(({ key }) => key);
+    const usedSupsKeys = usedSups.map(({ key }) => key);
     if (
-      newSups.every((a) => usedSups.includes(a)) &&
-      newSups.length === usedSups.length
+      newSupKeys.length === usedSupsKeys.length &&
+      newSupKeys.every((key, index) => usedSupsKeys[index] === key)
     ) {
       // No change
       return;
     }
-    setUsedSups(newSups);
+    setUsedSups(newSups.map((sup, index) => ({ ...sup, index: index + 1 })));
     () => {
       usedRef.current = [];
     };
@@ -64,5 +69,6 @@ function SupProvider<T extends SupElements = SupElements>(
   );
 }
 
-export { SupElement, SupElements, SupContext, SupContextType };
+export { SupContext };
+export type { SupElement, SupElements, SupContextType };
 export default SupProvider;
